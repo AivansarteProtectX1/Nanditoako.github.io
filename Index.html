@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nandito Ako Lyrics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #000;
+      color: #ffcc00;
+      font-family: 'Orbitron', sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      position: relative;
+    }
+    h1 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 42px;
+      color: #ffcc00;
+      margin-bottom: 40px;
+    }
+    .lyrics {
+      font-size: 30px;
+      text-align: center;
+      min-height: 80px;
+      letter-spacing: 2px;
+    }
+    button {
+      margin-top: 30px;
+      padding: 12px 28px;
+      font-size: 20px;
+      border: none;
+      border-radius: 10px;
+      background: #ffcc00;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      font-family: 'Orbitron', sans-serif;
+    }
+    button:hover {
+      background: #ffdb4d;
+      transform: scale(1.05);
+    }
+    /* Rainbow Watermark */
+    .watermark {
+      position: absolute;
+      bottom: 10px;
+      font-size: 12px;
+      font-weight: bold;
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rainbowMove 5s linear infinite;
+    }
+    @keyframes rainbowMove {
+      from { background-position: 0%; }
+      to { background-position: 200%; }
+    }
+  </style>
+</head>
+<body>
+  <h1 id="title">🎶 Nandito Ako 🎶</h1>
+
+  <!-- Hidden Audio -->
+  <audio id="bg-music">
+    <source src="ANDITO.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Lyrics -->
+  <div class="lyrics" id="lyrics"></div>
+
+  <!-- Enter Button -->
+  <button id="startBtn">👉 ENTER</button>
+  <!-- Replay Button -->
+  <button id="replayBtn" style="display:none;">🔄 REPLAY</button>
+
+  <!-- Watermark -->
+  <div class="watermark">MADE BY: AIVANSARTEPROTECTX1</div>
+
+  <script>
+    // Lyrics with custom typing speed per line
+    const lines = [
+      { text: "Ahhhhhhhhh ahhhhhhhhhh", speed: 150},
+      { text: "Nandito akoooo", speed: 120 },
+      { text: "Umiiibig sayoooo", speed: 150 },
+      { text: "Kahit naaa", speed: 130 },
+      { text: "Nagdurugo ang pusoooo", speed: 150 },
+      { text: "At kung sakaling", speed: 80 },
+      { text: "Iiwanan ka nyaaaaaaaa", speed: 150 },
+      { text: "Wag kang mag-alala", speed: 100 },
+      { text: "May nagmamahal sayooo", speed: 80 },
+      { text: "Nandito akoooooooooo", speed: 190 },
+      { text: "ouhhhh ouhhhhh ouhh", speed: 150 }
+    ];
+
+    let lineIndex = 0;
+    let charIndex = 0;
+    const lyricsDiv = document.getElementById("lyrics");
+    const startBtn = document.getElementById("startBtn");
+    const replayBtn = document.getElementById("replayBtn");
+    const title = document.getElementById("title");
+    const bgMusic = document.getElementById("bg-music");
+    let autoRunning = false;
+
+    // Function para sa typewriter effect per line
+    function typeLine(lineObj, callback) {
+      charIndex = 0;
+      lyricsDiv.textContent = "";
+      function typing() {
+        if (charIndex < lineObj.text.length) {
+          lyricsDiv.textContent += lineObj.text.charAt(charIndex);
+          charIndex++;
+          setTimeout(typing, lineObj.speed); // speed kada letra
+        } else {
+          setTimeout(callback, 1500); // pahinga bago sunod na linya
+        }
+      }
+      typing();
+    }
+
+    // Function para sa sunod-sunod na lines
+    function playAll() {
+      if (lineIndex < lines.length) {
+        typeLine(lines[lineIndex], () => {
+          lineIndex++;
+          playAll();
+        });
+      } else {
+        lyricsDiv.textContent = "🎵 Tapos na 🎵";
+        bgMusic.pause();
+        bgMusic.currentTime = 0; 
+        replayBtn.style.display = "inline-block"; 
+      }
+    }
+
+    // Start button
+    startBtn.onclick = () => {
+      if (!autoRunning) {
+        autoRunning = true;
+        startBtn.style.display = "none"; 
+        title.style.display = "none"; 
+        replayBtn.style.display = "none"; 
+        bgMusic.play(); // play music kapag ENTER pinindot
+        lineIndex = 0;
+        playAll();
+      }
+    };
+
+    // Replay button
+    replayBtn.onclick = () => {
+      replayBtn.style.display = "none";
+      autoRunning = true;
+      bgMusic.play();
+      lineIndex = 0;
+      playAll();
+    };
+  </script>
+</body>
+</html>
